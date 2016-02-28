@@ -2,10 +2,10 @@ import sys
 import json
 
 import HB
-import server
+import machine_server
 
 HB_thread = None
-server_thread = None
+machine_thread = None
 
 config_file_name = "./config.json"
 
@@ -24,10 +24,10 @@ else:
     print 'config[ name ] = ' + config['name']
     HB_thread = HB.start_HB(config)
    
-server_thread = server.start_server(config) 
+machine_thread = machine_server.start_machine(config) 
 
 HB_thread.join()
-server_thread.join()
+machine_thread.join()
 
 
 

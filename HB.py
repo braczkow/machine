@@ -15,23 +15,36 @@ def HB_worker(config):
         print 'name not defined'
         return
     
+    name = config['name']
+    platform_IP = config['platform_IP']
+    platform_port = config['platform_port']
+    
+    print 'name: ' + name + ' platform_IP: ' + platform_IP + ' platform_port: ' + platform_port
+    
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     except socket.error, msg:
-        print 'Failed to create socket. Error code: ' + str(msg[0]) + ' , Error message : ' + msg[1]
+        print 'HB socket create failed. Bye Bye.'
         return
 
-    print 'HB socket created'
+    print 'HB socket created.' 
+    print 'HB waiting for platform connect...'
     
-    s.connect((config['platform_IP'] , int(config['platform_port']))) 
+    s.connect((platform_IP , int(platform_port)))
     
-    message = '{"name": "{}"}'.format(config['name'])
+    print 'HB platform connected.' 
+    
+    message = '{"name": "' + name + '"}'
     print 'HB message: ' + message
     
     while True:
-        print 'HB_worker'
-        s.sendall(message)
-        sleep(10)
+        print 'about to send heart-beat '
+        try:
+            s.sendall(message)
+        except Exception:
+            print 'platform unreachable'
+            
+        sleep(1)
 
 def start_HB(config):
     print 'starting heart-beat'
